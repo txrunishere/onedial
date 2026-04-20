@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, EyeOff, Smartphone, LogIn, Computer } from "lucide-react";
+import { Smartphone, LogIn, Computer } from "lucide-react";
 import { Input } from "./ui/input";
 import { PasswordInput } from "./ui/password-input";
 
@@ -9,6 +9,21 @@ type LoginTabProps = {
 
 export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
   const [device, setDevice] = useState<"personal" | "borrowed">("personal");
+  const [alias, setAlias] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setAlias(e.target.value);
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setPassword(e.target.value);
+
+  const handleLoginUser = async () => {
+    console.log({
+      alias,
+      password,
+    });
+  };
 
   const handleRegisterTabNavigation = () => setIsRegisterTab(true);
 
@@ -40,15 +55,27 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
 
       <div className="mb-4">
         <label className="mb-2 block text-sm text-gray-400">ALIAS</label>
-        <Input placeholder="s.ample.96" type="text" />
+        <Input
+          placeholder="s.ample.96"
+          type="text"
+          value={alias}
+          onChange={handleAliasChange}
+        />
       </div>
 
       <div className="relative mb-6">
         <label className="mb-2 block text-sm text-gray-400">PIN</label>
-        <PasswordInput placeholder="••••••" />
+        <PasswordInput
+          placeholder="••••••"
+          value={password}
+          onChange={handlePasswordChange}
+        />
       </div>
 
-      <button className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-300 py-3 text-sm font-bold text-blue-800 transition hover:opacity-90">
+      <button
+        onClick={handleLoginUser}
+        className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-300 py-3 text-sm font-bold text-blue-800 transition hover:opacity-90"
+      >
         <LogIn className="h-4 w-4 font-bold" />
         Sign in
       </button>

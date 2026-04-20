@@ -9,6 +9,8 @@ type InputProps = {
   max?: number;
   min?: number;
   isDisabled?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const PasswordInput = ({
@@ -17,6 +19,8 @@ export const PasswordInput = ({
   placeholder,
   max,
   min,
+  value,
+  onChange,
 }: InputProps) => {
   const [showPin, setShowPin] = useState(false);
 
@@ -32,6 +36,8 @@ export const PasswordInput = ({
         min={min}
         max={max}
         disabled={isDisabled}
+        value={value}
+        onChange={onChange}
       />
       <button
         type="button"

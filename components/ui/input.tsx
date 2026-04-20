@@ -7,6 +7,8 @@ type InputProps = {
   max?: number;
   min?: number;
   isDisabled?: boolean;
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export const Input = ({
@@ -16,6 +18,8 @@ export const Input = ({
   type,
   max,
   min,
+  value,
+  onChange,
 }: InputProps) => {
   return (
     <input
@@ -28,6 +32,8 @@ export const Input = ({
       type={type}
       max={max}
       min={min}
+      value={value}
+      onChange={onChange}
     />
   );
 };
