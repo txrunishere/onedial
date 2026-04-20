@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, Smartphone, LogIn, Computer } from "lucide-react";
+import { Input } from "./ui/input";
+import { PasswordInput } from "./ui/password-input";
 
 type LoginTabProps = {
   setIsRegisterTab: React.Dispatch<React.SetStateAction<boolean>>;
@@ -7,7 +9,6 @@ type LoginTabProps = {
 
 export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
   const [device, setDevice] = useState<"personal" | "borrowed">("personal");
-  const [showPin, setShowPin] = useState(false);
 
   const handleRegisterTabNavigation = () => setIsRegisterTab(true);
 
@@ -39,28 +40,12 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
 
       <div className="mb-4">
         <label className="mb-2 block text-sm text-gray-400">ALIAS</label>
-        <input
-          type="text"
-          placeholder="your alias"
-          className="w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3 text-white placeholder-gray-500 transition focus:ring-2 focus:ring-gray-500 focus:outline-none"
-        />
+        <Input placeholder="s.ample.96" type="text" />
       </div>
 
       <div className="relative mb-6">
         <label className="mb-2 block text-sm text-gray-400">PIN</label>
-        <input
-          type={showPin ? "text" : "password"}
-          placeholder="••••••"
-          className="w-full rounded-lg border border-gray-600 bg-transparent px-4 py-3 pr-12 text-white placeholder-gray-500 focus:ring-2 focus:ring-gray-500 focus:outline-none"
-          max={6}
-        />
-        <button
-          type="button"
-          onClick={() => setShowPin(!showPin)}
-          className="absolute top-11 right-3 text-gray-400"
-        >
-          {showPin ? <Eye size={18} /> : <EyeOff size={18} />}
-        </button>
+        <PasswordInput placeholder="••••••" />
       </div>
 
       <button className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-300 py-3 text-sm font-bold text-blue-800 transition hover:opacity-90">

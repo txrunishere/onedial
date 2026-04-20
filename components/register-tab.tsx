@@ -8,9 +8,6 @@ type RegisterTabProps = {
 };
 
 export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
-  const [showPin, setShowPin] = useState(false);
-  const [showConfirmPin, setShowConfirmPin] = useState(false);
-
   const handleLoginNavigation = () => setIsRegisterTab(false);
 
   return (
