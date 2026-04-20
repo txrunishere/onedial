@@ -1,3 +1,7 @@
+import { AuthScreen } from "@/components/auth-screen";
+
 export default function Home() {
-  return <div>Home</div>;
+  const user = null;
+
+  return <div>{user ? <div></div> : <AuthScreen />}</div>;
 }
