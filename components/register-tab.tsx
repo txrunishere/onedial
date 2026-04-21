@@ -1,7 +1,8 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { UserPlus } from "lucide-react";
 import { Input } from "./ui/input";
 import { PasswordInput } from "./ui/password-input";
+import { registerUserAction } from "@/lib/actions";
 
 type RegisterTabProps = {
   setIsRegisterTab: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,6 +14,12 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
   const [alias, setAlias] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  useEffect(() => {
+    if (password.length > 6) {
+      setPassword(password.substring(0, 6));
+    }
+  }, [password, setPassword]);
 
   const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) =>
     setFirstName(e.target.value);
@@ -30,13 +37,14 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
     setConfirmPassword(e.target.value);
 
   const handleRegisterUser = async () => {
-    console.log({
+    const response = await registerUserAction({
       firstName,
       email,
       alias,
-      password,
-      confirmPassword,
+      pin: password,
+      confirmPin: confirmPassword,
     });
+    console.log(response);
   };
 
   const handleLoginNavigation = () => setIsRegisterTab(false);

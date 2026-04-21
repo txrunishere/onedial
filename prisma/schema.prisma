@@ -12,7 +12,7 @@ model User {
   firstName      String
   email          String   @unique
   alias          String   @unique
-  pin            Int
+  pin            String
   defaultMessage String
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now()) @updatedAt

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/cn";
+import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 
