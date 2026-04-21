@@ -3,9 +3,18 @@ import { UserPlus } from "lucide-react";
 import { Input } from "./ui/input";
 import { PasswordInput } from "./ui/password-input";
 import { registerUserAction } from "@/lib/actions";
+import { toast } from "sonner";
 
 type RegisterTabProps = {
   setIsRegisterTab: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+type RegisterError = {
+  firstName?: string[] | undefined;
+  email?: string[] | undefined;
+  alias?: string[] | undefined;
+  pin?: string[] | undefined;
+  confirmPin?: string[] | undefined;
 };
 
 export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
@@ -14,12 +23,19 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
   const [alias, setAlias] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [errors, setErrors] = useState<RegisterError | null>(null);
 
   useEffect(() => {
     if (password.length > 6) {
       setPassword(password.substring(0, 6));
     }
   }, [password, setPassword]);
+
+  useEffect(() => {
+    if (confirmPassword.length > 6) {
+      setConfirmPassword(confirmPassword.substring(0, 6));
+    }
+  }, [confirmPassword, setConfirmPassword]);
 
   const handleFirstNameChange = (e: ChangeEvent<HTMLInputElement>) =>
     setFirstName(e.target.value);
@@ -37,6 +53,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
     setConfirmPassword(e.target.value);
 
   const handleRegisterUser = async () => {
+    setErrors(null);
     const response = await registerUserAction({
       firstName,
       email,
@@ -44,7 +61,19 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
       pin: password,
       confirmPin: confirmPassword,
     });
+
     console.log(response);
+
+    if (!response.success) {
+      if (typeof response.error === "object") {
+        setErrors(response.error);
+        return;
+      }
+      toast.error(response.error);
+      return;
+    }
+
+    toast.success("Register Success!");
   };
 
   const handleLoginNavigation = () => setIsRegisterTab(false);
@@ -61,6 +90,9 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={firstName}
           onChange={handleFirstNameChange}
         />
+        <p className="mt-1 text-sm text-red-500">
+          {errors && errors.firstName?.[0]}
+        </p>
       </div>
 
       <div className="mb-4">
@@ -73,6 +105,9 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={email}
           onChange={handleEmailChange}
         />
+        <p className="mt-1 text-sm text-red-500">
+          {errors && errors.email?.[0]}
+        </p>
       </div>
 
       <div className="mb-2">
@@ -86,8 +121,11 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           onChange={handleAliasChange}
         />
 
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-1 text-xs text-gray-500">
           Min. 6 characters. Letters, numbers, -, _ only.
+        </p>
+        <p className="mt-1 text-sm text-red-500">
+          {errors && errors.alias?.[0]}
         </p>
       </div>
 
@@ -100,6 +138,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={password}
           onChange={handlePasswordChange}
         />
+        <p className="mt-1 text-sm text-red-500">{errors && errors.pin?.[0]}</p>
       </div>
 
       <div className="relative mb-6">
@@ -111,6 +150,9 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
         />
+        <p className="mt-1 text-sm text-red-500">
+          {errors && errors.confirmPin?.[0]}
+        </p>
       </div>
 
       <button
