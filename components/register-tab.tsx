@@ -4,6 +4,7 @@ import { Input } from "./ui/input";
 import { PasswordInput } from "./ui/password-input";
 import { registerUserAction } from "@/lib/actions";
 import { toast } from "sonner";
+import { useUser } from "@/context/user-context";
 
 type RegisterTabProps = {
   setIsRegisterTab: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,6 +25,8 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [errors, setErrors] = useState<RegisterError | null>(null);
+
+  const { setUser } = useUser();
 
   useEffect(() => {
     if (password.length > 6) {
@@ -73,6 +76,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
       return;
     }
 
+    setUser(response.user);
     toast.success("Register Success!");
   };
 
