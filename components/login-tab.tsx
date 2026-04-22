@@ -1,7 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Smartphone, LogIn, Computer } from "lucide-react";
 import { Input } from "./ui/input";
 import { PasswordInput } from "./ui/password-input";
+import { loginUserAction } from "@/lib/actions";
+import { toast } from "sonner";
+import { useUser } from "@/context/user-context";
+
+type LoginErrors = {
+  alias?: string[] | undefined;
+  pin?: string[] | undefined;
+};
 
 type LoginTabProps = {
   setIsRegisterTab: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,6 +19,14 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
   const [device, setDevice] = useState<"personal" | "borrowed">("personal");
   const [alias, setAlias] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [errors, setErrors] = useState<LoginErrors | null>(null);
+  const { setUser } = useUser();
+
+  useEffect(() => {
+    if (password.length > 6) {
+      setPassword(password.substring(0, 6));
+    }
+  }, [password, setPassword]);
 
   const handleAliasChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setAlias(e.target.value);
@@ -19,10 +35,23 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
     setPassword(e.target.value);
 
   const handleLoginUser = async () => {
-    console.log({
+    setErrors(null);
+    const response = await loginUserAction({
       alias,
-      password,
+      pin: password,
     });
+
+    if (!response.success) {
+      if (typeof response.error === "object") {
+        setErrors(response.error);
+        return;
+      }
+      toast.error(response.error);
+      return;
+    }
+
+    setUser(response.user);
+    toast.success("Login Success!");
   };
 
   const handleRegisterTabNavigation = () => setIsRegisterTab(true);
@@ -61,6 +90,7 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
           value={alias}
           onChange={handleAliasChange}
         />
+        <p className="mt-1 text-sm text-red-500">{errors?.alias?.[0]}</p>
       </div>
 
       <div className="relative mb-6">
@@ -70,6 +100,7 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
           value={password}
           onChange={handlePasswordChange}
         />
+        <p className="mt-1 text-sm text-red-500">{errors?.pin?.[0]}</p>
       </div>
 
       <button

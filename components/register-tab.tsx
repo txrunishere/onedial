@@ -94,9 +94,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={firstName}
           onChange={handleFirstNameChange}
         />
-        <p className="mt-1 text-sm text-red-500">
-          {errors && errors.firstName?.[0]}
-        </p>
+        <p className="mt-1 text-sm text-red-500">{errors?.firstName?.[0]}</p>
       </div>
 
       <div className="mb-4">
@@ -109,9 +107,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={email}
           onChange={handleEmailChange}
         />
-        <p className="mt-1 text-sm text-red-500">
-          {errors && errors.email?.[0]}
-        </p>
+        <p className="mt-1 text-sm text-red-500">{errors?.email?.[0]}</p>
       </div>
 
       <div className="mb-2">
@@ -128,9 +124,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
         <p className="mt-1 text-xs text-gray-500">
           Min. 6 characters. Letters, numbers, -, _ only.
         </p>
-        <p className="mt-1 text-sm text-red-500">
-          {errors && errors.alias?.[0]}
-        </p>
+        <p className="mt-1 text-sm text-red-500">{errors?.alias?.[0]}</p>
       </div>
 
       <div className="relative mb-4">
@@ -142,7 +136,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={password}
           onChange={handlePasswordChange}
         />
-        <p className="mt-1 text-sm text-red-500">{errors && errors.pin?.[0]}</p>
+        <p className="mt-1 text-sm text-red-500">{errors?.pin?.[0]}</p>
       </div>
 
       <div className="relative mb-6">
@@ -154,9 +148,7 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
         />
-        <p className="mt-1 text-sm text-red-500">
-          {errors && errors.confirmPin?.[0]}
-        </p>
+        <p className="mt-1 text-sm text-red-500">{errors?.confirmPin?.[0]}</p>
       </div>
 
       <button

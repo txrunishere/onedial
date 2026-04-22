@@ -112,4 +112,51 @@ export const registerUserAction = async (data: RegisterUserActionProps) => {
   }
 };
 
-export const loginUserAction = async (data: LoginUserActionProps) => {};
+export const loginUserAction = async (data: LoginUserActionProps) => {
+  const result = LoginSchema.safeParse(data);
+
+  if (!result.success) {
+    return {
+      success: false,
+      error: result.error.flatten().fieldErrors,
+    };
+  }
+
+  const parsedData = result.data;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        alias: parsedData.alias,
+      },
+    });
+
+    if (!user) {
+      return {
+        success: false,
+        error: "User not found",
+      };
+    }
+
+    const userPin = await bcrypt.compare(parsedData.pin, user.pin);
+
+    if (!userPin) {
+      return {
+        success: false,
+        error: "Invalid password",
+      };
+    }
+
+    return {
+      success: true,
+      user,
+    };
+  } catch (error) {
+    console.error("User Login error:", error);
+
+    return {
+      success: false,
+      error: "Something went wrong while login user",
+    };
+  }
+};
