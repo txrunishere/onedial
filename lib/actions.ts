@@ -129,6 +129,7 @@ export const loginUserAction = async (data: LoginUserActionProps) => {
       where: {
         alias: parsedData.alias,
       },
+      include: { contacts: true },
     });
 
     if (!user) {

@@ -39,7 +39,7 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full flex-col">
-        <div className="mx-auto h-full w-full max-w-md flex-1 rounded-2xl bg-[#1C1F2A] p-2 text-white shadow-2xl sm:my-10">
+        <div className="relative mx-auto h-full w-full max-w-md flex-1 rounded-2xl bg-[#1C1F2A] p-2 text-white shadow-2xl sm:my-10">
           <UserContextProvider>{children}</UserContextProvider>
         </div>
         <Toaster position="top-center" richColors closeButton />

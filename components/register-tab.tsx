@@ -65,8 +65,6 @@ export const RegisterTab = ({ setIsRegisterTab }: RegisterTabProps) => {
       confirmPin: confirmPassword,
     });
 
-    console.log(response);
-
     if (!response.success) {
       if (typeof response.error === "object") {
         setErrors(response.error);

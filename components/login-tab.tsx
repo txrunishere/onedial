@@ -20,7 +20,7 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
   const [alias, setAlias] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errors, setErrors] = useState<LoginErrors | null>(null);
-  const { setUser } = useUser();
+  const { setUser, setContactDevice } = useUser();
 
   useEffect(() => {
     if (password.length > 6) {
@@ -36,6 +36,7 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
 
   const handleLoginUser = async () => {
     setErrors(null);
+    setContactDevice(null);
     const response = await loginUserAction({
       alias,
       pin: password,
@@ -51,6 +52,7 @@ export const LoginTab = ({ setIsRegisterTab }: LoginTabProps) => {
     }
 
     setUser(response.user);
+    setContactDevice(device);
     toast.success("Login Success!");
   };
 
