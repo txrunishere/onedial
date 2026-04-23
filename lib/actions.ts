@@ -1,67 +1,18 @@
 "use server";
 
-import { LoginSchema, RegisterSchema } from "./schema";
+import { LoginSchema, RegisterSchema, AddContactSchema } from "./schema";
 import { z } from "zod";
 import prisma from "./prisma";
 import bcrypt from "bcrypt";
+import { revalidatePath } from "next/cache";
 
 type RegisterUserActionProps = z.infer<typeof RegisterSchema>;
 
 type LoginUserActionProps = z.infer<typeof LoginSchema>;
 
-// export const registerUserAction = async (data: RegisterUserActionProps) => {
-//   const { success, error, data: parsedData } = RegisterSchema.safeParse(data);
-
-//   if (!success) {
-//     return {
-//       success: false,
-//       error: JSON.stringify(error.flatten().fieldErrors),
-//     };
-//   }
-
-//   try {
-//     const response = await prisma.user.create({
-//       data: {
-//         alias: parsedData.alias,
-//         firstName: parsedData.firstName,
-//         email: parsedData.email,
-//         pin: parseInt(parsedData.pin),
-//         defaultMessage: `
-
-//         `,
-//       },
-//     });
-
-//     if (response) {
-//       return {
-//         success: true,
-//         user: response,
-//       };
-//     }
-
-//     return {
-//       success: false,
-//       error: "Unable to register user",
-//     };
-//   } catch (error: unknown) {
-//     console.error("User Register error:", error);
-
-//     if ((error as any).code === "P2002") {
-//       return {
-//         success: false,
-//         error: "User already exists!",
-//       };
-//     }
-
-//     return {
-//       success: false,
-//       error:
-//         error instanceof Error
-//           ? error.message
-//           : "Something went wrong while register user",
-//     };
-//   }
-// };
+type AddContactActionProps = z.infer<typeof AddContactSchema> & {
+  userId: string;
+};
 
 export const registerUserAction = async (data: RegisterUserActionProps) => {
   const result = RegisterSchema.safeParse(data);
@@ -144,7 +95,7 @@ export const loginUserAction = async (data: LoginUserActionProps) => {
     if (!userPin) {
       return {
         success: false,
-        error: "Invalid password",
+        error: "Invalid pin",
       };
     }
 
@@ -158,6 +109,42 @@ export const loginUserAction = async (data: LoginUserActionProps) => {
     return {
       success: false,
       error: "Something went wrong while login user",
+    };
+  }
+};
+
+export const addContactAction = async (data: AddContactActionProps) => {
+  const parseResult = AddContactSchema.safeParse(data);
+
+  if (!parseResult.success) {
+    return {
+      success: false,
+      error: parseResult.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    const response = await prisma.contact.create({
+      data,
+    });
+
+    if (!response) {
+      return {
+        success: false,
+        error: "Something went wrong while creating contact",
+      };
+    }
+
+    revalidatePath("/");
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error("Add Contact Error:", error);
+
+    return {
+      success: false,
+      error: "Unable to add contact, Try again.",
     };
   }
 };
